@@ -1,0 +1,58 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(dogatchi CXX)
+
+if (WIN32)
+    SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+file (GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
+
+find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+
+file(GLOB_RECURSE test_sources CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.cpp)
+file(GLOB_RECURSE test_headers CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.hpp)
+
+add_library(lib${PROJECT_NAME} SHARED dog.cpp callbackTimer.cpp ${HEADER_LIST})
+target_compile_options(lib${PROJECT_NAME} PRIVATE /utf-8)
+
+
+include(CTest)
+
+foreach(t ${test_sources})
+    # get the relative path in the source tree
+    get_filename_component(test_path ${t} PATH)
+
+    # get the source name without extension
+    get_filename_component(test_name ${t} NAME_WE)
+
+    # concatenate the relative path and name in an underscore separated identifier
+    string(REPLACE "/" "_" test_concat "${test_path}/${test_name}")
+
+    # strip the leading "test_" part from the test ID
+    string(REGEX REPLACE "^test_" "" test_id ${test_concat})
+
+    # depend on the current source file, all the test headers, and the parent project headers
+    add_executable(${test_id} ${t} ${test_headers} ${HEADER_LIST})
+
+    # link against the Boost libraries
+    target_link_libraries(${test_id} PRIVATE Boost::unit_test_framework lib${PROJECT_NAME})
+
+    # include directories for the test headers, the parent project headers, and the Boost headers
+    target_include_directories(${test_id} PRIVATE ${test_path} ${PROJECT_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
+
+    # match the relative path in the build tree with the corresponding one in the source tree 
+    set_target_properties(${test_id} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${test_path})
+
+    # add a test with executable in the relative path of the build tree
+    add_test(NAME ${test_id} COMMAND ${test_id})
+endforeach( t ${test_sources} )
+
+
+
+add_executable(${PROJECT_NAME} main.cpp ${HEADER_LIST})
+target_compile_options(${PROJECT_NAME} PRIVATE /utf-8)
+target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME})
