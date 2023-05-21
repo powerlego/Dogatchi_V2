@@ -69,6 +69,26 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "any": "cpp",
+        "array": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "condition_variable": "cpp",
+        "coroutine": "cpp",
+        "csignal": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "future": "cpp",
+        "iostream": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "shared_mutex": "cpp",
+        "source_location": "cpp",
+        "strstream": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp",
+        "xtree": "cpp",
+        "*.ipp": "cpp"
     }
 }
