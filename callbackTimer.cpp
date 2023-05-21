@@ -1,33 +1,54 @@
+#include <iostream>
+
 #include "callbackTimer.hpp"
 
-CallbackTimer::CallbackTimer() : _execute(false) {}
+CallbackTimer::CallbackTimer() : _stop(true), timer(context) {}
 
 CallbackTimer::~CallbackTimer() {
-    if(_execute.load(std::memory_order_acquire)) {
+    if(!_stop.load()) {
         stop();
     }
-}
+};
 
 void CallbackTimer::stop() {
-    _execute.store(false, std::memory_order_release);
-    if(_thd.joinable()) {
-        _thd.join();
+    _stop.store(true);
+    timer.cancel();
+    if(thd.joinable()) {
+        thd.join();
     }
 }
 
-void CallbackTimer::start(int interval, std::function<void(void)> func) {
-    if(_execute.load(std::memory_order_acquire)) {
-        stop();
-    }
-    _execute.store(true, std::memory_order_release);
-    _thd = std::thread([this, interval, func]() {
-        while(_execute.load(std::memory_order_acquire)) {
-            func();
-            std::this_thread::sleep_for(std::chrono::milliseconds(interval));
-        }
+void CallbackTimer::execute(int interval, std::function<void(void)> func, boost::asio::steady_timer &timer) {
+    timer.expires_after(std::chrono::milliseconds(interval));
+    timer.async_wait([this, interval, func, &timer](const boost::system::error_code &ec) {
+        executeInternal(interval, func, timer, ec);
     });
 }
 
-bool CallbackTimer::is_running() const noexcept {
-    return (_execute.load(std::memory_order_acquire) && _thd.joinable());
+void CallbackTimer::executeInternal(int interval, std::function<void(void)> func, boost::asio::steady_timer &timer,
+                                    const boost::system::error_code &ec) {
+    if(_stop.load()) {
+        return;
+    }
+    if(ec) {
+        std::cout << "timer is canceled: " << ec << std::endl;
+        return;
+    }
+    func();
+
+    execute(interval, func, timer);
+}
+
+void CallbackTimer::start(int interval, std::function<void(void)> func) {
+    if(!_stop.load()) {
+        stop();
+    }
+
+    _stop.store(false);
+
+    execute(interval, func, timer);
+
+    thd = std::thread([this]() {
+        context.run();
+    });
 }
