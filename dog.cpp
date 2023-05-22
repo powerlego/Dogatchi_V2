@@ -13,7 +13,7 @@ Dog::Dog() {
     thirst      = 100;
 }
 
-Dog::Dog(std::string name, double weight, int age, double hunger, double happiness, double energyLevel, double thirst) {
+Dog::Dog(std::string name, int weight, int age, int hunger, int happiness, int energyLevel, int thirst) {
     this->name        = name;
     this->weight      = weight;
     this->age         = age;
@@ -36,10 +36,10 @@ void Dog::stopTimer() {
 
 void Dog::update() {
     this->age += 1;
-    this->hunger -= 0.05;
-    this->energyLevel -= 0.009;
-    this->happiness -= 0.003;
-    this->weight += 0.005;
+    this->hunger -= 10;
+    this->energyLevel -= 5;
+    this->happiness -= 5;
+    this->weight += 10;
     this->thirst -= 5;
 }
 
@@ -55,11 +55,11 @@ void Dog::setName(std::string name) {
     this->name = name;
 }
 
-double Dog::getWeight() const {
+int Dog::getWeight() const {
     return weight;
 }
 
-void Dog::setWeight(double weight) {
+void Dog::setWeight(int weight) {
     this->weight = weight;
 }
 
@@ -71,11 +71,11 @@ void Dog::setAge(int age) {
     this->age = age;
 }
 
-double Dog::getHunger() const {
+int Dog::getHunger() const {
     return hunger;
 }
 
-void Dog::setHunger(double hunger) {
+void Dog::setHunger(int hunger) {
     if(hunger > 100) {
         this->hunger = 100;
     }
@@ -87,11 +87,11 @@ void Dog::setHunger(double hunger) {
     }
 }
 
-double Dog::getHappiness() const {
+int Dog::getHappiness() const {
     return happiness;
 }
 
-void Dog::setHappiness(double happiness) {
+void Dog::setHappiness(int happiness) {
     if(happiness > 100) {
         this->happiness = 100;
     }
@@ -103,11 +103,11 @@ void Dog::setHappiness(double happiness) {
     }
 }
 
-double Dog::getEnergyLevel() const {
+int Dog::getEnergyLevel() const {
     return energyLevel;
 }
 
-void Dog::setEnergyLevel(double energyLevel) {
+void Dog::setEnergyLevel(int energyLevel) {
     if(energyLevel > 100) {
         this->energyLevel = 100;
     }
@@ -119,11 +119,11 @@ void Dog::setEnergyLevel(double energyLevel) {
     }
 }
 
-double Dog::getThirst() const {
+int Dog::getThirst() const {
     return thirst;
 }
 
-void Dog::setThirst(double thirst) {
+void Dog::setThirst(int thirst) {
     if(thirst > 100) {
         this->thirst = 100;
     }
@@ -133,6 +133,15 @@ void Dog::setThirst(double thirst) {
     else {
         this->thirst = thirst;
     }
+}
+
+void Dog::eat() {
+    std::cout << name << " is eating." << std::endl;
+    hunger += 10;
+    energyLevel += 10;
+    happiness += 10;
+    thirst += 10;
+    weight += 10;
 }
 
 Dog::~Dog() {
