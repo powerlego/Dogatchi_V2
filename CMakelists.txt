@@ -2,14 +2,14 @@ cmake_minimum_required(VERSION 3.20)
 
 project(dogatchi CXX)
 
-if (WIN32)
+if(WIN32)
     SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file (GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
+file(GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
 
 find_package(Boost REQUIRED COMPONENTS unit_test_framework thread system)
 
@@ -22,7 +22,6 @@ add_library(lib${PROJECT_NAME} SHARED dog.cpp callbackTimer.cpp ${HEADER_LIST})
 target_link_libraries(lib${PROJECT_NAME} PRIVATE Boost::thread Boost::system)
 target_include_directories(lib${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 target_compile_options(lib${PROJECT_NAME} PRIVATE /utf-8)
-
 
 include(CTest)
 
@@ -48,14 +47,12 @@ foreach(t ${test_sources})
     # include directories for the test headers, the parent project headers, and the Boost headers
     target_include_directories(${test_id} PRIVATE ${test_path} ${PROJECT_SOURCE_DIR})
 
-    # match the relative path in the build tree with the corresponding one in the source tree 
+    # match the relative path in the build tree with the corresponding one in the source tree
     set_target_properties(${test_id} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${test_path})
 
     # add a test with executable in the relative path of the build tree
     add_test(NAME ${test_id} COMMAND ${test_id})
-endforeach( t ${test_sources} )
-
-
+endforeach(t ${test_sources})
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE /utf-8)
