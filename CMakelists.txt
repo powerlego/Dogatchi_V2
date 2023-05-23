@@ -20,7 +20,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 file(GLOB_RECURSE test_sources CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.cpp)
 file(GLOB_RECURSE test_headers CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.hpp)
 
-add_library(${library_name} SHARED dog.cpp callbackTimer.cpp ${HEADER_LIST})
+add_library(${library_name} SHARED dog.cpp callbackTimer.cpp utils.cpp ${HEADER_LIST})
 target_link_libraries(${library_name} PRIVATE Boost::thread Boost::system)
 target_include_directories(${library_name} PRIVATE ${PROJECT_SOURCE_DIR})
 target_compile_options(${library_name} PRIVATE /utf-8)
