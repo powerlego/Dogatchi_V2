@@ -1,9 +1,9 @@
 #define BOOST_TEST_MODULE dog_happiness
 #include <boost/test/unit_test.hpp>
-#include <boost/thread.hpp>
-#include <cmath>
 
 #include "dog.hpp"
+
+BOOST_AUTO_TEST_SUITE(dog_happiness)
 
 BOOST_AUTO_TEST_CASE(getHappiness) {
     Dog dog;
@@ -19,3 +19,5 @@ BOOST_AUTO_TEST_CASE(setHappiness) {
     dog.setHappiness(-200);
     BOOST_TEST(dog.getHappiness() == 0);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

@@ -1,7 +1,5 @@
 #define BOOST_TEST_MODULE dog_constructor
 #include <boost/test/unit_test.hpp>
-#include <boost/thread.hpp>
-#include <cmath>
 
 #include "dog.hpp"
 

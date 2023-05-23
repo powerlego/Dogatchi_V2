@@ -1,7 +1,5 @@
 #define BOOST_TEST_MODULE dog_pup_image
 #include <boost/test/unit_test.hpp>
-#include <boost/thread.hpp>
-#include <cmath>
 
 #include "dog.hpp"
 

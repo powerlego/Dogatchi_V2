@@ -1,3 +1,4 @@
+#include <boost/thread.hpp>
 #include <chrono>
 #include <iostream>
 
@@ -138,10 +139,27 @@ void Dog::setThirst(int thirst) {
 void Dog::eat() {
     std::cout << name << " is eating." << std::endl;
     hunger += 10;
-    energyLevel += 10;
-    happiness += 10;
+    energyLevel += 5;
+    happiness += 5;
+    weight += 5;
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));
+    std::cout << name << " is done eating." << std::endl;
+}
+
+void Dog::drink() {
+    std::cout << name << " is drinking." << std::endl;
     thirst += 10;
-    weight += 10;
+    energyLevel += 5;
+    happiness += 5;
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));
+    std::cout << name << " is done drinking." << std::endl;
+}
+
+void Dog::sleep() {
+    std::cout << name << " is sleeping." << std::endl;
+    energyLevel += 10;
+    boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));
+    std::cout << name << " is done sleeping." << std::endl;
 }
 
 Dog::~Dog() {
