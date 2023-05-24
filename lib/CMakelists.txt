@@ -1,0 +1,11 @@
+if(WIN32)
+    SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
+
+file(GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
+
+SET(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+
+add_library(${library_name} SHARED dog.cpp callbackTimer.cpp utils.cpp ${HEADER_LIST})
+target_link_libraries(${library_name} PRIVATE Boost::thread Boost::system)
+target_compile_options(${library_name} PRIVATE /utf-8)
