@@ -27,7 +27,6 @@ class Dog {
          *
          */
         Dog();
-
         /**
          * @brief Construct a new Dog object
          *
@@ -47,42 +46,175 @@ class Dog {
         virtual ~Dog();
 
         /**
-         * @brief Get the Name object
+         * @brief Get the name property
          *
          * @return std::string The name of the dog
          */
         std::string getName() const;
+        /**
+         * @brief Set the name property
+         *
+         * @param name The name of the dog
+         */
         void        setName(std::string name);
-        int         getWeight() const;
-        void        setWeight(int weight);
-        int         getAge() const;
-        void        setAge(int age);
-        int         getHunger() const;
-        void        setHunger(int hunger);
-        int         getHappiness() const;
-        void        setHappiness(int happiness);
-        int         getEnergyLevel() const;
-        void        setEnergyLevel(int energyLevel);
-        int         getThirst() const;
-        void        setThirst(int thirst);
-        void        startTimer();
-        void        stopTimer();
-        void        eat();
-        void        drink();
-        void        sleep();
 
+        /**
+         * @brief Get the weight property
+         *
+         * @return int The weight of the dog in pounds
+         */
+        int  getWeight() const;
+        /**
+         * @brief Set the weight property
+         *
+         * @param weight The weight of the dog in pounds
+         */
+        void setWeight(int weight);
+
+        /**
+         * @brief Get the age property
+         *
+         * @return int The age of the dog in months
+         */
+        int  getAge() const;
+        /**
+         * @brief Set the age property
+         *
+         * @param age The age of the dog in months
+         */
+        void setAge(int age);
+
+        /**
+         * @brief Get the hunger property
+         *
+         * @return int The hunger level of the dog
+         */
+        int  getHunger() const;
+        /**
+         * @brief Set the hunger property
+         *
+         * @param hunger The hunger level of the dog
+         */
+        void setHunger(int hunger);
+
+        /**
+         * @brief Get the happiness property
+         *
+         * @return int The happiness level of the dog
+         */
+        int  getHappiness() const;
+        /**
+         * @brief Set the happiness property
+         *
+         * @param happiness The happiness level of the dog
+         */
+        void setHappiness(int happiness);
+
+        /**
+         * @brief Get the energyLevel property
+         *
+         * @return int The energy level of the dog
+         */
+        int  getEnergyLevel() const;
+        /**
+         * @brief Set the energyLevel property
+         *
+         * @param energyLevel The energy level of the dog
+         */
+        void setEnergyLevel(int energyLevel);
+
+        /**
+         * @brief Get the thirst property
+         *
+         * @return int The thirst level of the dog
+         */
+        int  getThirst() const;
+        /**
+         * @brief Set the thirst property
+         *
+         * @param thirst The thirst level of the dog
+         */
+        void setThirst(int thirst);
+
+        /**
+         * @brief Start the update timer for the dog
+         *
+         */
+        void startTimer();
+        /**
+         * @brief Stop the update timer for the dog
+         *
+         */
+        void stopTimer();
+        /**
+         * @brief Let the dog eat
+         *
+         */
+        void eat();
+        /**
+         * @brief Let the dog drink
+         *
+         */
+        void drink();
+        /**
+         * @brief Let the dog sleep
+         *
+         */
+        void sleep();
+
+        /**
+         * @brief An ASCII image of a dog
+         *
+         * @return std::string The ASCII image of a dog
+         */
         static std::string pupImage();
 
     private:
+        /**
+         * @brief The timer for updating the dog's properties
+         *
+         */
         CallbackTimer timer;
+        /**
+         * @brief The name of the dog
+         *
+         */
         std::string   name;
+        /**
+         * @brief The weight of the dog in pounds
+         *
+         */
         int           weight;
+        /**
+         * @brief The age of the dog in months
+         *
+         */
         int           age;
+        /**
+         * @brief The hunger level of the dog
+         *
+         */
         int           hunger;
+        /**
+         * @brief The happiness level of the dog
+         *
+         */
         int           happiness;
+        /**
+         * @brief The energy level of the dog
+         *
+         */
         int           energyLevel;
+        /**
+         * @brief The thirst level of the dog
+         *
+         */
         int           thirst;
 
+        /**
+         * @brief Function to update the dog's properties
+         *
+         */
         void update();
 };
 
