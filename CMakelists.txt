@@ -27,33 +27,29 @@ target_compile_options(${library_name} PRIVATE /utf-8)
 
 include(CTest)
 
+function(add_boost_test SOURCE_FILE_NAME DEPENDENCY_LIB)
+    get_filename_component(TEST_EXECUTABLE_NAME ${SOURCE_FILE_NAME} NAME_WE)
+
+    add_executable(${TEST_EXECUTABLE_NAME} ${SOURCE_FILE_NAME})
+    target_link_libraries(${TEST_EXECUTABLE_NAME}
+        ${DEPENDENCY_LIB} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} Boost::thread)
+    target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
+
+    file(READ "${SOURCE_FILE_NAME}" SOURCE_FILE_CONTENTS)
+    string(REGEX MATCHALL "BOOST_AUTO_TEST_CASE\\( *([A-Za-z_0-9]+) *\\)"
+        FOUND_TESTS ${SOURCE_FILE_CONTENTS})
+
+    foreach(HIT ${FOUND_TESTS})
+        string(REGEX REPLACE ".*\\( *([A-Za-z_0-9]+) *\\).*" "\\1" TEST_NAME ${HIT})
+
+        add_test(NAME "${TEST_EXECUTABLE_NAME}.${TEST_NAME}"
+            COMMAND ${TEST_EXECUTABLE_NAME}
+            --run_test=${TEST_NAME} --catch_system_error=yes)
+    endforeach()
+endfunction()
+
 foreach(t ${test_sources})
-    # get the relative path in the source tree
-    get_filename_component(test_path ${t} PATH)
-
-    # get the source name without extension
-    get_filename_component(test_name ${t} NAME_WE)
-
-    # concatenate the relative path and name in an underscore separated identifier
-    string(REPLACE "/" "_" test_concat "${test_path}/${test_name}")
-
-    # strip the leading "test_" part from the test ID
-    string(REGEX REPLACE "^test_" "" test_id ${test_concat})
-
-    # depend on the current source file, all the test headers, and the parent project headers
-    add_executable(${test_id} ${t} ${test_headers} ${HEADER_LIST})
-
-    # link against the Boost libraries
-    target_link_libraries(${test_id} PRIVATE Boost::unit_test_framework Boost::thread ${library_name})
-
-    # include directories for the test headers, the parent project headers, and the Boost headers
-    target_include_directories(${test_id} PRIVATE ${test_path} ${PROJECT_SOURCE_DIR})
-
-    # match the relative path in the build tree with the corresponding one in the source tree
-    set_target_properties(${test_id} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${test_path})
-
-    # add a test with executable in the relative path of the build tree
-    add_test(NAME ${test_id} COMMAND ${test_id})
+    add_boost_test(${t} ${library_name})
 endforeach(t ${test_sources})
 
 add_executable(${PROJECT_NAME} main.cpp)
