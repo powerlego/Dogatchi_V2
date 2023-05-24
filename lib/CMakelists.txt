@@ -6,6 +6,14 @@ file(GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
 
 SET(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
+if(DOXYGEN_FOUND)
+    doxygen_add_docs(
+        ${library_name}_docs
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generate library documentation with Doxygen"
+    )
+endif()
+
 add_library(${library_name} SHARED dog.cpp callbackTimer.cpp utils.cpp ${HEADER_LIST})
 target_link_libraries(${library_name} PRIVATE Boost::thread Boost::system)
 target_compile_options(${library_name} PRIVATE /utf-8)

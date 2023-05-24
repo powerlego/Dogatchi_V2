@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(dogatchi CXX)
+project(dogatchi)
 
 if(WIN32)
     SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -32,10 +32,30 @@ endfunction()
 
 set(library_name lib${PROJECT_NAME})
 
-find_package(Doxygen REQUIRED dot)
+find_package(Doxygen COMPONENTS dot)
 
-if(${DOXYGEN_FOUND})
-endif(${DOXYGEN_FOUND})
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
+
+    if(WIN32)
+        set(DOXYGEN_CPP_CLI_SUPPORT YES)
+    endif()
+
+    set(DOXYGEN_EXTRACT_STATIC YES)
+    set(DOXYGEN_SOURCE_BROWSER YES)
+    set(DOXYGEN_HTML_COLORSTYLE "AUTO_DARK")
+    set(DOXYGEN_HTML_DYNAMIC_SECTIONS YES)
+    set(DOXYGEN_GENERATE_TREEVIEW YES)
+    set(DOXYGEN_DISABLE_INDEX YES)
+    set(DOXYGEN_DOT_IMAGE_FORMAT svg)
+    set(DOXYGEN_INTERACTIVE_SVG YES)
+    set(DOXYGEN_UML_LOOK YES)
+    set(DOXYGEN_UML_LIMIT_NUM_FIELDS 50)
+    set(DOXYGEN_CALL_GRAPH YES)
+    set(DOXYGEN_CALLER_GRAPH YES)
+    set(DOXYGEN_DOT_MULTI_TARGETS YES)
+    set(DOXYGEN_GENERATE_LEGEND NO)
+endif(DOXYGEN_FOUND)
 
 find_package(Boost REQUIRED COMPONENTS unit_test_framework thread system)
 
