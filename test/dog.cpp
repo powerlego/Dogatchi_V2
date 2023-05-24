@@ -6,8 +6,6 @@
 #include "dog.hpp"
 #include "utils.hpp"
 
-BOOST_AUTO_TEST_SUITE(DogTests)
-
 BOOST_AUTO_TEST_CASE(Constructor) {
     Dog dog("Nicholas", 10, 1, 100, 100, 10, 100);
     BOOST_TEST(dog.getName() == std::string("Nicholas"));
@@ -200,5 +198,3 @@ BOOST_AUTO_TEST_CASE(SleepMessages) {
     BOOST_TEST(messages[1] == "Dog is sleeping.");
     BOOST_TEST(messages[2] == "Dog is done sleeping.");
 }
-
-BOOST_AUTO_TEST_SUITE_END()
