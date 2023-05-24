@@ -8,36 +8,38 @@
 class Dog {
     public:
         Dog();
-        Dog(std::string name, double weight, int age, double hunger, double happiness, double energyLevel,
-            double thirst);
+        Dog(std::string name, int weight, int age, int hunger, int happiness, int energyLevel, int thirst);
         virtual ~Dog();
         std::string        getName() const;
         void               setName(std::string name);
-        double             getWeight() const;
-        void               setWeight(double weight);
+        int                getWeight() const;
+        void               setWeight(int weight);
         int                getAge() const;
         void               setAge(int age);
-        double             getHunger() const;
-        void               setHunger(double hunger);
-        double             getHappiness() const;
-        void               setHappiness(double happiness);
-        double             getEnergyLevel() const;
-        void               setEnergyLevel(double energyLevel);
-        double             getThirst() const;
-        void               setThirst(double thirst);
+        int                getHunger() const;
+        void               setHunger(int hunger);
+        int                getHappiness() const;
+        void               setHappiness(int happiness);
+        int                getEnergyLevel() const;
+        void               setEnergyLevel(int energyLevel);
+        int                getThirst() const;
+        void               setThirst(int thirst);
         void               startTimer();
         void               stopTimer();
+        void               eat();
+        void               drink();
+        void               sleep();
         static std::string pupImage();
 
     private:
         CallbackTimer timer;
         std::string   name;
-        double        weight;
+        int           weight;
         int           age;
-        double        hunger;
-        double        happiness;
-        double        energyLevel;
-        double        thirst;
+        int           hunger;
+        int           happiness;
+        int           energyLevel;
+        int           thirst;
 
         void update();
 };

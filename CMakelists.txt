@@ -2,14 +2,16 @@ cmake_minimum_required(VERSION 3.20)
 
 project(dogatchi CXX)
 
-if (WIN32)
+if(WIN32)
     SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file (GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
+file(GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
+
+set(library_name lib${PROJECT_NAME})
 
 find_package(Boost REQUIRED COMPONENTS unit_test_framework thread system)
 
@@ -18,45 +20,38 @@ include_directories(${Boost_INCLUDE_DIRS})
 file(GLOB_RECURSE test_sources CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.cpp)
 file(GLOB_RECURSE test_headers CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.hpp)
 
-add_library(lib${PROJECT_NAME} SHARED dog.cpp callbackTimer.cpp ${HEADER_LIST})
-target_link_libraries(lib${PROJECT_NAME} PRIVATE Boost::thread Boost::system)
-target_include_directories(lib${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
-target_compile_options(lib${PROJECT_NAME} PRIVATE /utf-8)
-
+add_library(${library_name} SHARED dog.cpp callbackTimer.cpp utils.cpp ${HEADER_LIST})
+target_link_libraries(${library_name} PRIVATE Boost::thread Boost::system)
+target_include_directories(${library_name} PRIVATE ${PROJECT_SOURCE_DIR})
+target_compile_options(${library_name} PRIVATE /utf-8)
 
 include(CTest)
 
+function(add_boost_test SOURCE_FILE_NAME DEPENDENCY_LIB)
+    get_filename_component(TEST_EXECUTABLE_NAME ${SOURCE_FILE_NAME} NAME_WE)
+
+    add_executable(${TEST_EXECUTABLE_NAME} ${SOURCE_FILE_NAME})
+    target_link_libraries(${TEST_EXECUTABLE_NAME}
+        ${DEPENDENCY_LIB} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} Boost::thread)
+    target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
+
+    file(READ "${SOURCE_FILE_NAME}" SOURCE_FILE_CONTENTS)
+    string(REGEX MATCHALL "BOOST_AUTO_TEST_CASE\\( *([A-Za-z_0-9]+) *\\)"
+        FOUND_TESTS ${SOURCE_FILE_CONTENTS})
+
+    foreach(HIT ${FOUND_TESTS})
+        string(REGEX REPLACE ".*\\( *([A-Za-z_0-9]+) *\\).*" "\\1" TEST_NAME ${HIT})
+
+        add_test(NAME "${TEST_EXECUTABLE_NAME}.${TEST_NAME}"
+            COMMAND ${TEST_EXECUTABLE_NAME}
+            --run_test=${TEST_NAME} --catch_system_error=yes)
+    endforeach()
+endfunction()
+
 foreach(t ${test_sources})
-    # get the relative path in the source tree
-    get_filename_component(test_path ${t} PATH)
-
-    # get the source name without extension
-    get_filename_component(test_name ${t} NAME_WE)
-
-    # concatenate the relative path and name in an underscore separated identifier
-    string(REPLACE "/" "_" test_concat "${test_path}/${test_name}")
-
-    # strip the leading "test_" part from the test ID
-    string(REGEX REPLACE "^test_" "" test_id ${test_concat})
-
-    # depend on the current source file, all the test headers, and the parent project headers
-    add_executable(${test_id} ${t} ${test_headers} ${HEADER_LIST})
-
-    # link against the Boost libraries
-    target_link_libraries(${test_id} PRIVATE Boost::unit_test_framework Boost::thread lib${PROJECT_NAME})
-
-    # include directories for the test headers, the parent project headers, and the Boost headers
-    target_include_directories(${test_id} PRIVATE ${test_path} ${PROJECT_SOURCE_DIR})
-
-    # match the relative path in the build tree with the corresponding one in the source tree 
-    set_target_properties(${test_id} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${test_path})
-
-    # add a test with executable in the relative path of the build tree
-    add_test(NAME ${test_id} COMMAND ${test_id})
-endforeach( t ${test_sources} )
-
-
+    add_boost_test(${t} ${library_name})
+endforeach(t ${test_sources})
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE /utf-8)
-target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${library_name})
