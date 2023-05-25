@@ -198,7 +198,7 @@ void Dog::bang() {
     std::cout << "You say the word bang to " << name << "." << std::endl;
     std::cout << name << " limps, then crawls, and then plays dead." << std::endl;
     boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));
-    std::cout << name << " stops doing the bang trick.";
+    std::cout << name << " stops doing the bang trick." << std::endl;
     happiness += 10;
     energyLevel -= 7;
     thirst -= 5;
@@ -276,7 +276,8 @@ void Dog::fetchFrisbee() {
 }
 
 void Dog::tugOfWar() {
-    std::mt19937_64                    rng(rd);
+    std::random_device                 rd;
+    std::default_random_engine         rng(rd());
     std::uniform_int_distribution<int> dist(0, 9);
     std::cout << "You pull on one side of the rope and " << name << " pulls on the other side." << std::endl;
     boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));
@@ -361,7 +362,7 @@ void Dog::sit() {
     std::cout << name << " is sitting." << std::endl;
     boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));
     std::cout << name << " is done sitting." << std::endl;
-    happiness += 10;
+    happiness += 5;
     thirst -= 5;
     hunger -= 5;
 }
@@ -370,7 +371,7 @@ void Dog::layDown() {
     std::cout << name << " is laying down." << std::endl;
     boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));
     std::cout << name << " is done laying down." << std::endl;
-    happiness += 10;
+    happiness += 5;
     energyLevel += 5;
     thirst -= 5;
     hunger -= 5;
