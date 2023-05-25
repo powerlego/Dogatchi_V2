@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(dogatchi CXX)
+project(dogatchi)
 
 if(WIN32)
     SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -9,31 +9,20 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB HEADER_LIST CONFIGURE_DEPENDS *.hpp)
-
 set(library_name lib${PROJECT_NAME})
 
-find_package(Boost REQUIRED COMPONENTS unit_test_framework thread system)
-
-include_directories(${Boost_INCLUDE_DIRS})
-
-file(GLOB_RECURSE test_sources CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.cpp)
-file(GLOB_RECURSE test_headers CONFIGURE_DEPENDS RELATIVE ${PROJECT_SOURCE_DIR} test/*.hpp)
-
-add_library(${library_name} SHARED dog.cpp callbackTimer.cpp utils.cpp ${HEADER_LIST})
-target_link_libraries(${library_name} PRIVATE Boost::thread Boost::system)
-target_include_directories(${library_name} PRIVATE ${PROJECT_SOURCE_DIR})
-target_compile_options(${library_name} PRIVATE /utf-8)
-
-include(CTest)
-
-function(add_boost_test SOURCE_FILE_NAME DEPENDENCY_LIB)
+function(add_boost_test SOURCE_FILE_NAME DEPENDENCY_LIB INCLUDE_DIRS)
     get_filename_component(TEST_EXECUTABLE_NAME ${SOURCE_FILE_NAME} NAME_WE)
 
     add_executable(${TEST_EXECUTABLE_NAME} ${SOURCE_FILE_NAME})
     target_link_libraries(${TEST_EXECUTABLE_NAME}
         ${DEPENDENCY_LIB} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} Boost::thread)
-    target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
+    target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE ${INCLUDE_DIRS})
+
+    if(WIN32)
+        add_custom_command(TARGET ${TEST_EXECUTABLE_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${TEST_EXECUTABLE_NAME}> $<TARGET_RUNTIME_DLLS:${TEST_EXECUTABLE_NAME}> $<TARGET_RUNTIME_DLLS:${TEST_EXECUTABLE_NAME}> BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/${library_name}.dll COMMAND_EXPAND_LISTS)
+    endif()
 
     file(READ "${SOURCE_FILE_NAME}" SOURCE_FILE_CONTENTS)
     string(REGEX MATCHALL "BOOST_AUTO_TEST_CASE\\( *([A-Za-z_0-9]+) *\\)"
@@ -48,10 +37,40 @@ function(add_boost_test SOURCE_FILE_NAME DEPENDENCY_LIB)
     endforeach()
 endfunction()
 
-foreach(t ${test_sources})
-    add_boost_test(${t} ${library_name})
-endforeach(t ${test_sources})
+find_package(Doxygen COMPONENTS dot)
 
-add_executable(${PROJECT_NAME} main.cpp)
-target_compile_options(${PROJECT_NAME} PRIVATE /utf-8)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${library_name})
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
+
+    if(WIN32)
+        set(DOXYGEN_CPP_CLI_SUPPORT YES)
+    endif()
+
+    set(DOXYGEN_EXTRACT_STATIC YES)
+    set(DOXYGEN_SOURCE_BROWSER YES)
+    set(DOXYGEN_HTML_COLORSTYLE "AUTO_DARK")
+    set(DOXYGEN_HTML_DYNAMIC_SECTIONS YES)
+    set(DOXYGEN_GENERATE_TREEVIEW YES)
+    set(DOXYGEN_DISABLE_INDEX NO)
+    set(DOXYGEN_DOT_IMAGE_FORMAT svg)
+    set(DOXYGEN_INTERACTIVE_SVG YES)
+    set(DOXYGEN_CALL_GRAPH YES)
+    set(DOXYGEN_CALLER_GRAPH YES)
+    set(DOXYGEN_DOT_MULTI_TARGETS YES)
+    set(DOXYGEN_GENERATE_LEGEND NO)
+    set(DOXYGEN_HTML_HEADER "${PROJECT_SOURCE_DIR}/docs/header.html")
+    set(DOXYGEN_HTML_EXTRA_FILES
+        "${PROJECT_SOURCE_DIR}/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js;${PROJECT_SOURCE_DIR}/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js;${PROJECT_SOURCE_DIR}/doxygen-awesome-css/doxygen-awesome-paragraph-link.js;${PROJECT_SOURCE_DIR}/doxygen-awesome-css/doxygen-awesome-interactive-toc.js")
+    set(DOXYGEN_HTML_EXTRA_STYLESHEET
+        "${PROJECT_SOURCE_DIR}/doxygen-awesome-css/doxygen-awesome.css;${PROJECT_SOURCE_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only.css;${PROJECT_SOURCE_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css")
+endif(DOXYGEN_FOUND)
+
+find_package(Boost REQUIRED COMPONENTS unit_test_framework thread system)
+
+include_directories(${Boost_INCLUDE_DIRS})
+
+include(CTest)
+
+add_subdirectory(lib)
+add_subdirectory(app)
+add_subdirectory(test)

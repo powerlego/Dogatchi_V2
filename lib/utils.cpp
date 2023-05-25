@@ -1,3 +1,14 @@
+/**
+ * @file utils.cpp
+ * @author Nicholas Curl (curl.nicholas@gmail.com)
+ * @brief The source file for the utils library
+ * @version 0.1
+ * @date 05-25-2023
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include "utils.hpp"
 
 std::vector<std::string> split(std::string s, std::string delimiter) {

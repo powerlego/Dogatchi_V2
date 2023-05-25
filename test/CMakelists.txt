@@ -1,0 +1,11 @@
+
+SET(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+
+file(GLOB_RECURSE test_sources *.cpp)
+file(GLOB_RECURSE test_headers CONFIGURE_DEPENDS *.hpp)
+
+SET(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+
+foreach(t ${test_sources})
+    add_boost_test(${t} ${library_name} ${PROJECT_SOURCE_DIR}/lib)
+endforeach(t ${test_sources})
