@@ -17,7 +17,6 @@
 
 #include "callbackTimer.hpp"
 
-
 /**
  * @brief The Dog class
  *
@@ -309,12 +308,6 @@ class Dog {
          *
          */
         int           thirst;
-
-        /**
-         * @brief Random device for generating random numbers
-         *
-         */
-        std::random_device rd;
 
         /**
          * @brief Function to update the dog's properties
