@@ -12,9 +12,11 @@
 #ifndef DOG_HPP
 #define DOG_HPP
 
+#include <random>
 #include <string>
 
 #include "callbackTimer.hpp"
+
 
 /**
  * @brief The Dog class
@@ -163,6 +165,103 @@ class Dog {
         void sleep();
 
         /**
+         * @brief Have the dog shake hands
+         *
+         */
+        void shakeHands();
+        /**
+         * @brief Have the dog play dead
+         *
+         */
+        void playDead();
+        /**
+         * @brief Have the dog pretend to be shot
+         *
+         */
+        void bang();
+        /**
+         * @brief Have the dog roll over
+         *
+         */
+        void rollOver();
+        /**
+         * @brief Have the dog bark
+         *
+         */
+        void bark();
+        /**
+         * @brief Have the dog howl
+         *
+         */
+        void howl();
+
+        /**
+         * @brief Have the dog fetch a bone
+         *
+         */
+        void fetchBone();
+        /**
+         * @brief Have the dog fetch a stick
+         *
+         */
+        void fetchStick();
+        /**
+         * @brief Have the dog fetch a ball
+         *
+         */
+        void fetchBall();
+        /**
+         * @brief Have the dog fetch a frisbee
+         *
+         */
+        void fetchFrisbee();
+        /**
+         * @brief Have the dog play tug-of-war
+         *
+         */
+        void tugOfWar();
+        /**
+         * @brief Have the dog jump
+         *
+         */
+        void jump();
+        /**
+         * @brief Have the dog jump a rope
+         *
+         */
+        void jumpRope();
+        /**
+         * @brief Have the dog jump through a hoop
+         *
+         */
+        void jumpThroughHoop();
+        /**
+         * @brief Have the dog jump over a fence
+         *
+         */
+        void jumpOverFence();
+        /**
+         * @brief Have the dog spin in a circle
+         *
+         */
+        void spin();
+        /**
+         * @brief Have the dog crawl on the ground
+         *
+         */
+        void crawl();
+        /**
+         * @brief Have the dog sit
+         *
+         */
+        void sit();
+        /**
+         * @brief Have the dog lay down
+         *
+         */
+        void layDown();
+
+        /**
          * @brief An ASCII image of a dog
          *
          * @return std::string The ASCII image of a dog
@@ -210,6 +309,12 @@ class Dog {
          *
          */
         int           thirst;
+
+        /**
+         * @brief Random device for generating random numbers
+         *
+         */
+        std::random_device rd;
 
         /**
          * @brief Function to update the dog's properties
