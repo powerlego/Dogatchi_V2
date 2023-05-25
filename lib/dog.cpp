@@ -1,3 +1,14 @@
+/**
+ * @file dog.cpp
+ * @author Nicholas Curl (curl.nicholas@gmail.com)
+ * @brief Source file for the Dog class
+ * @version 0.1
+ * @date 05-24-2023
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include <boost/thread.hpp>
 #include <chrono>
 #include <iostream>

@@ -1,3 +1,13 @@
+/**
+ * @file callbackTimer.cpp
+ * @author Nicholas Curl (curl.nicholas@gmail.com)
+ * @brief The source file of the CallbackTimer class
+ * @version 0.1
+ * @date 05-25-2023
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 #include <iostream>
 
 #include "callbackTimer.hpp"
