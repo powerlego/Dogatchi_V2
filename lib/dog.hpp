@@ -32,14 +32,14 @@ class Dog {
          * @brief Construct a new Dog object
          *
          * @param name The name of the dog
-         * @param weight The weight of the dog in pounds
          * @param age The age of the dog in months
+         * @param weight The weight of the dog in pounds
          * @param hunger The hunger level of the dog
+         * @param thirst The thirst level of the dog
          * @param happiness The happiness level of the dog
          * @param energyLevel The energy level of the dog
-         * @param thirst The thirst level of the dog
          */
-        Dog(std::string name, int weight, int age, int hunger, int happiness, int energyLevel, int thirst);
+        Dog(std::string name, int age, int weight, int hunger, int thirst, int happiness, int energyLevel);
         /**
          * @brief Destroy the Dog object
          *
@@ -147,6 +147,7 @@ class Dog {
          *
          */
         void stopTimer();
+
         /**
          * @brief Let the dog eat
          *
@@ -193,7 +194,6 @@ class Dog {
          *
          */
         void howl();
-
         /**
          * @brief Have the dog fetch a bone
          *
@@ -259,6 +259,12 @@ class Dog {
          *
          */
         void layDown();
+
+        /**
+         * @brief Examine the dogs stats
+         *
+         */
+        void examine();
 
         /**
          * @brief An ASCII image of a dog
