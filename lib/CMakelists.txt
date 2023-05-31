@@ -17,3 +17,18 @@ endif()
 add_library(${library_name} SHARED dog.cpp callbackTimer.cpp utils.cpp ${HEADER_LIST})
 target_link_libraries(${library_name} PRIVATE Boost::thread Boost::system)
 target_compile_options(${library_name} PRIVATE /utf-8)
+
+if(WIN32)
+    add_custom_command(TARGET ${library_name} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy -t
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        $<TARGET_FILE:${library_name}>
+        BYPRODUCTS ${CMAKE_BINARY_DIR}/app/${library_name}.dll
+    )
+    add_custom_command(TARGET ${library_name} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy -t
+        ${CMAKE_BINARY_DIR}/test
+        $<TARGET_FILE:${library_name}>
+        BYPRODUCTS ${CMAKE_BINARY_DIR}/test/${library_name}.dll
+    )
+endif()
